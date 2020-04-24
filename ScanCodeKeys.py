@@ -1,3 +1,7 @@
+'''
+SOURCED FROM https://stackoverflow.com/questions/13564851/how-to-generate-keyboard-events-in-python
+'''
+
 import ctypes
 from ctypes import wintypes
 user32 = ctypes.WinDLL('user32', use_last_error=True)

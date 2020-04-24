@@ -55,23 +55,59 @@ def click_cs_button(button):
     clickx = test["location"]["x"] + startx
     clicky = test["location"]["y"] + starty
     if button == "ACCEPT":
-        accept_visible = False
-        while not accept_visible:
-            if pyautogui.pixelMatchesColor(int(clickx),int(clicky),(76, 175, 80)):
-                accept_visible=True
+        ctr = 0
+        while True:
+            pix = pyautogui.pixel(int(clickx),int(clicky))
+            if pix[1] > 150:    #green check is more effective than specific color
+                print("\nFound ACCEPT button!")
+                break
+            idx = ctr %3
+            if idx == 0:
+                print(f"ACCEPT button not visible, waiting 2 seconds.  ",end="\r",flush=True)
+            if idx == 1:
+                print(f"ACCEPT button not visible, waiting 2 seconds.. ",end="\r",flush=True)
+            if idx == 2:
+                print(f"ACCEPT button not visible, waiting 2 seconds...",end="\r",flush=True)
+            ctr = ctr + 1
+            time.sleep(2)
     pyautogui.moveTo(clickx,clicky)
     pyautogui.click()
-    pyautogui.click()
+    pyautogui.click() #didnt work without doing it twice when button is arg (WTF)
+    
+def wait_for_menu():
+    #(255, 255, 255)
+    startx = test["size"]["x"]*button_offsets["PLAY"][0]
+    starty = test["size"]["y"]*button_offsets["PLAY"][1]
+    clickx = test["location"]["x"] + startx
+    clicky = test["location"]["y"] + starty
+    ctr = 0
+    while True:
+        if pyautogui.pixelMatchesColor(int(clickx),int(clicky),(255, 255, 255)):
+            print("\nFound menu!")
+            return
+        idx = ctr % 3
+        if idx == 0:
+            print(f"Menu not visible, waiting 5 seconds.  ",end="\r",flush=True)
+        if idx == 1:
+            print(f"Menu not visible, waiting 5 seconds.. ",end="\r",flush=True)
+        if idx == 2:
+            print(f"Menu not visible, waiting 5 seconds...",end="\r",flush=True)
+        ctr = ctr + 1
+        time.sleep(5)
+    
 
 def main():
     global test
     test = get_window_info("Counter-Strike: Global Offensive")
-    focus_window()    
-    anti_afk()
-    click_cs_button("PLAY")
-    click_cs_button("WINGMAN")
-    click_cs_button("GO")
-    click_cs_button("ACCEPT")
+    while True:
+        focus_window()    
+        wait_for_menu()
+        anti_afk()
+        click_cs_button("PLAY")
+        click_cs_button("WINGMAN")
+        click_cs_button("GO")
+        click_cs_button("ACCEPT")
+        time.sleep(120)
 
 if __name__ == '__main__':
     main()
