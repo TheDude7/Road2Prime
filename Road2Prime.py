@@ -101,9 +101,9 @@ def main():
     test = get_window_info("Counter-Strike: Global Offensive")
     match_idx = 1
     while True:
-        print(f"Starting Match {match_idx}")
         focus_window()    
         wait_for_menu()
+        print(f"Starting Match {match_idx}")
         anti_afk()
         click_cs_button("PLAY")
         click_cs_button("WINGMAN")
