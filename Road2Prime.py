@@ -20,9 +20,9 @@ def get_window_info(window_name):
         w = rect[2] - x
         h = rect[3] - y
         if win32gui.GetWindowText(hwnd) == window_name:
-            print("Window \"%s\":" % win32gui.GetWindowText(hwnd))
-            print("\tLocation: (%d, %d)" % (x, y))
-            print("\t    Size: (%d, %d)" % (w, h))
+            #print("Window \"%s\":" % win32gui.GetWindowText(hwnd))
+            #print("\tLocation: (%d, %d)" % (x, y))
+            #print("\t    Size: (%d, %d)" % (w, h))
             location = {"x": x, "y": y}
             size = {"x": w, "y": h}
             window["location"] = location
@@ -35,8 +35,9 @@ def toggle_console():
     ReleaseKey(0xC0)
     
 def anti_afk():
+    focus_window()   
+    time.sleep(0.2)
     toggle_console()
-    time.sleep(0.5)
     pyautogui.write('+left;+right;mm_dedicated_search_maxping 350')
     pyautogui.press('enter')
     toggle_console()
@@ -47,6 +48,7 @@ def focus_window():
     clickx = test["location"]["x"] + startx
     clicky = test["location"]["y"] + 5
     pyautogui.moveTo(clickx,clicky)
+    time.sleep(0.1)
     pyautogui.click()
     
 def click_cs_button(button):
@@ -71,8 +73,10 @@ def click_cs_button(button):
             ctr = ctr + 1
             time.sleep(2)
     pyautogui.moveTo(clickx,clicky)
+    time.sleep(0.1)
     pyautogui.click()
-    pyautogui.click() #didnt work without doing it twice when button is arg (WTF)
+   # time.sleep(0.1)
+   # pyautogui.click() #didnt work without doing it twice when button is arg (WTF)
     
 def wait_for_menu():
     #(255, 255, 255)
@@ -99,18 +103,20 @@ def wait_for_menu():
 def main():
     global test
     test = get_window_info("Counter-Strike: Global Offensive")
+    print("Got CSGO Window")
     match_idx = 1
     while True:
         focus_window()    
         wait_for_menu()
-        print(f"Starting Match {match_idx}")
+        print(f"\nStarting Match {match_idx}")
         anti_afk()
         click_cs_button("PLAY")
         click_cs_button("WINGMAN")
         click_cs_button("GO")
         click_cs_button("ACCEPT")
-        print("\n")
-        time.sleep(300)
+        match_idx = match_idx+ 1
+        print("\nWatching for next match")
+        time.sleep(180) #too high and failed accepts take a long time
 
 if __name__ == '__main__':
     main()
