@@ -99,7 +99,9 @@ def wait_for_menu():
 def main():
     global test
     test = get_window_info("Counter-Strike: Global Offensive")
+    match_idx = 1
     while True:
+        print(f"Starting Match {idx}")
         focus_window()    
         wait_for_menu()
         anti_afk()
@@ -107,7 +109,8 @@ def main():
         click_cs_button("WINGMAN")
         click_cs_button("GO")
         click_cs_button("ACCEPT")
-        time.sleep(120)
+        print("\n")
+        time.sleep(300)
 
 if __name__ == '__main__':
     main()
